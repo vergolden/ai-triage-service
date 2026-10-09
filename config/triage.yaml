@@ -1,0 +1,7 @@
+# Правила сервиса. Для другого проекта меняются файлы config/, код остаётся тем же.
+categories: [billing, support, complaint, other]
+confidences: [high, medium, low]
+max_reply_sentences: 6
+model_timeout_seconds: 25
+fallback_reply: "Ваше обращение принято и передано оператору. Мы свяжемся с вами в ближайшее время."
+fallback_category: other
