@@ -42,6 +42,25 @@ def load_rules() -> Rules:
     )
 
 
+def provider() -> str:
+    value = os.getenv("LLM_PROVIDER", "openai").strip().lower()
+    if value not in ("openai", "anthropic"):
+        raise ConfigError(f"LLM_PROVIDER={value!r} не поддерживается. Допустимо: openai, anthropic.")
+    return value
+
+
+def temperature() -> float:
+    return float(os.getenv("LLM_TEMPERATURE", "0.2"))
+
+
+def openai_base_url() -> str:
+    return os.getenv("OPENAI_BASE_URL", "https://api.proxyapi.ru/openai/v1")
+
+
+def openai_model() -> str:
+    return os.getenv("OPENAI_MODEL", "gpt-4.1-mini")
+
+
 def api_key() -> str:
     key = os.getenv("PROXY_API_KEY", "").strip()
     if not key:

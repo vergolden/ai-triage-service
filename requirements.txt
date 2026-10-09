@@ -2,5 +2,6 @@ fastapi==0.143.0
 uvicorn[standard]==0.54.0
 sqlalchemy==2.1.4
 anthropic==1.13.0
+openai==3.27.0
 python-dotenv==1.2.4
 PyYAML==6.0.3
