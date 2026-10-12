@@ -44,5 +44,5 @@ def run_triage(request: TriageRequest, rules: Rules) -> tuple[TriageResponse, st
     if count_sentences(reply) > rules.max_reply_sentences:
         return fallback(rules, f"Черновик длиннее {rules.max_reply_sentences} предложений")
 
-    # Правила эскалации (complaint / low) добавляются на шаге 3
-    return TriageResponse(category=category, draft_reply=reply.strip(), confidence=confidence, escalate=False), ""
+    escalate = category in rules.escalate_categories or confidence in rules.escalate_confidences
+    return TriageResponse(category=category, draft_reply=reply.strip(), confidence=confidence, escalate=escalate), ""

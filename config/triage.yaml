@@ -5,3 +5,7 @@ max_reply_sentences: 6
 model_timeout_seconds: 25
 fallback_reply: "Ваше обращение принято и передано оператору. Мы свяжемся с вами в ближайшее время."
 fallback_category: other
+# Когда обязательно нужен человек. Сбой модели эскалирует всегда (см. fallback_*).
+escalate_if:
+  categories: [complaint]
+  confidences: [low]

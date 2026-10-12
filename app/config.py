@@ -26,6 +26,8 @@ class Rules:
     fallback_category: str
     prompt_template: str
     knowledge: str
+    escalate_categories: list[str]
+    escalate_confidences: list[str]
 
 
 def load_rules() -> Rules:
@@ -39,6 +41,8 @@ def load_rules() -> Rules:
         fallback_category=data["fallback_category"],
         prompt_template=(CONFIG_DIR / "prompt.md").read_text(encoding="utf-8"),
         knowledge=(CONFIG_DIR / "knowledge.md").read_text(encoding="utf-8").strip(),
+        escalate_categories=data["escalate_if"]["categories"],
+        escalate_confidences=data["escalate_if"]["confidences"],
     )
 
 
@@ -74,3 +78,11 @@ def base_url() -> str:
 
 def model_name() -> str:
     return os.getenv("CLAUDE_MODEL", "claude-sonnet-5-5")
+
+
+def rate_limit_per_minute() -> int:
+    return int(os.getenv("RATE_LIMIT_PER_MINUTE", "5"))
+
+
+def database_url() -> str:
+    return os.getenv("DATABASE_URL", "sqlite:///./triage.db")
