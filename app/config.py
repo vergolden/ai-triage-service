@@ -1,5 +1,6 @@
 """Настройки из env и правила из config/triage.yaml."""
 import os
+import re
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -28,6 +29,7 @@ class Rules:
     knowledge: str
     escalate_categories: list[str]
     escalate_confidences: list[str]
+    injection_patterns: list[re.Pattern]
 
 
 def load_rules() -> Rules:
@@ -43,6 +45,7 @@ def load_rules() -> Rules:
         knowledge=(CONFIG_DIR / "knowledge.md").read_text(encoding="utf-8").strip(),
         escalate_categories=data["escalate_if"]["categories"],
         escalate_confidences=data["escalate_if"]["confidences"],
+        injection_patterns=[re.compile(p, re.IGNORECASE) for p in data["injection_patterns"]],
     )
 
 

@@ -25,8 +25,21 @@ def fallback(rules: Rules, reason: str) -> tuple[TriageResponse, str]:
     ), reason
 
 
+def find_injection(text: str, rules: Rules) -> str | None:
+    """Шаблон из triage.yaml, под который подпало обращение, или None."""
+    for pattern in rules.injection_patterns:
+        if pattern.search(text):
+            return pattern.pattern
+    return None
+
+
 def run_triage(request: TriageRequest, rules: Rules) -> tuple[TriageResponse, str]:
-    """Возвращает (ответ клиенту, текст ошибки или пустая строка)."""
+    """Возвращает (ответ клиенту, пометка или ошибка; пустая строка, если всё штатно)."""
+    pattern = find_injection(request.text, rules)
+    if pattern:
+        # модель не вызываем: явную атаку не отправляем во внешний сервис и не тратим токены
+        log.warning("Подозрение на манипуляцию, шаблон: %s", pattern)
+        return fallback(rules, f"Подозрение на манипуляцию (шаблон: {pattern})")
     try:
         data = llm.ask_model(
             build_system_prompt(rules), request.text, rules.categories, rules.confidences,
